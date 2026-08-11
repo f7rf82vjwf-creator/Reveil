@@ -1,3 +1,5 @@
+SecurityDashboardView()
+    .frame(maxWidth: .infinity)
 //
 //  DashboardView.swift
 //  Reveil
