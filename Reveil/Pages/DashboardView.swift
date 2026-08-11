@@ -26,6 +26,7 @@ struct DashboardView: View, GlobalTimerObserver {
 
     @available(iOS 16.0, *)
     private func updateBadgeCount() {
+
         #if canImport(UserNotifications)
 
         if !Self.isUserNotificationAuthorizationRequested {
@@ -34,30 +35,40 @@ struct DashboardView: View, GlobalTimerObserver {
                 .requestAuthorization(options: [.badge]) { succeed, _ in
 
                     if succeed {
-                        let securityModelPresented =
-                            PinStorage.shared.isPinned(forKey: .Security)
 
-                        UNUserNotificationCenter.current().setBadgeCount(
-                            securityModelPresented
-                            ? Security.shared.numberOfInsecureChecks
-                            : 0
-                        )
+                        let securityModelPresented =
+                            PinStorage.shared.isPinned(
+                                forKey: .Security
+                            )
+
+                        UNUserNotificationCenter.current()
+                            .setBadgeCount(
+                                securityModelPresented
+                                ? Security.shared.numberOfInsecureChecks
+                                : 0
+                            )
                     }
 
-                    Self.isUserNotificationAuthorizationRequestGranted = succeed
-                    Self.isUserNotificationAuthorizationRequested = true
+                    Self.isUserNotificationAuthorizationRequestGranted =
+                        succeed
+
+                    Self.isUserNotificationAuthorizationRequested =
+                        true
                 }
 
         } else if Self.isUserNotificationAuthorizationRequestGranted {
 
             let securityModelPresented =
-                PinStorage.shared.isPinned(forKey: .Security)
+                PinStorage.shared.isPinned(
+                    forKey: .Security
+                )
 
-            UNUserNotificationCenter.current().setBadgeCount(
-                securityModelPresented
-                ? Security.shared.numberOfInsecureChecks
-                : 0
-            )
+            UNUserNotificationCenter.current()
+                .setBadgeCount(
+                    securityModelPresented
+                    ? Security.shared.numberOfInsecureChecks
+                    : 0
+                )
         }
 
         #endif
@@ -72,11 +83,13 @@ struct DashboardView: View, GlobalTimerObserver {
             VStack(spacing: 20) {
 
                 // =====================================================
-                // 보안 진단 카드
+                // Security Dashboard
                 // =====================================================
 
                 NavigationLink {
+
                     SecurityDashboardView()
+
                 } label: {
 
                     HStack(spacing: 14) {
@@ -84,20 +97,24 @@ struct DashboardView: View, GlobalTimerObserver {
                         ZStack {
 
                             Circle()
-                                .fill(Color.red.opacity(0.12))
+                                .fill(
+                                    Color.red.opacity(0.12)
+                                )
                                 .frame(
                                     width: 50,
                                     height: 50
                                 )
 
-                            Image(systemName: "shield.checkered")
-                                .font(
-                                    .system(
-                                        size: 23,
-                                        weight: .semibold
-                                    )
+                            Image(
+                                systemName: "shield.checkered"
+                            )
+                            .font(
+                                .system(
+                                    size: 23,
+                                    weight: .semibold
                                 )
-                                .foregroundColor(.red)
+                            )
+                            .foregroundColor(.red)
                         }
 
                         VStack(
@@ -159,18 +176,21 @@ struct DashboardView: View, GlobalTimerObserver {
                 .buttonStyle(.plain)
 
                 // =====================================================
-                // 기존 Security Check
+                // Existing Security Check
                 // =====================================================
 
-                if PinStorage.shared.isPinned(forKey: .Security) {
+                if PinStorage.shared.isPinned(
+                    forKey: .Security
+                ) {
 
                     Section {
+
                         CheckmarkWidget()
                     }
                 }
 
                 // =====================================================
-                // 기존 Dashboard Widgets
+                // Existing Dashboard Entries
                 // =====================================================
 
                 ForEach(
@@ -227,7 +247,7 @@ struct DashboardView: View, GlobalTimerObserver {
             .padding()
         }
 
-        // MARK: - Lifecycle
+        // MARK: - Appear
 
         .onAppear {
 
@@ -238,10 +258,14 @@ struct DashboardView: View, GlobalTimerObserver {
             GlobalTimer.shared.addObserver(self)
         }
 
+        // MARK: - Disappear
+
         .onDisappear {
 
             GlobalTimer.shared.removeObserver(self)
         }
+
+        // MARK: - Security Loading
 
         .onReceive(
             securityModel.$isLoading
@@ -254,6 +278,7 @@ struct DashboardView: View, GlobalTimerObserver {
                 }
 
             } else {
+
                 // Fallback on earlier versions
             }
         }
@@ -287,37 +312,43 @@ struct DashboardView: View, GlobalTimerObserver {
         }
     }
 
-    // MARK: - Field
+    // MARK: - Field Widget
 
     @ViewBuilder
     private func fieldWidgetBuilder(
         _ entry: BasicEntry
     ) -> some View {
 
-        FieldWidget(entry: entry)
+        FieldWidget(
+            entry: entry
+        )
     }
 
-    // MARK: - Activity
+    // MARK: - Activity Widget
 
     @ViewBuilder
     private func activityWidgetBuilder(
         _ entry: ActivityEntry
     ) -> some View {
 
-        ActivityWidget(entry: entry)
+        ActivityWidget(
+            entry: entry
+        )
     }
 
-    // MARK: - Usage
+    // MARK: - Usage Widget
 
     @ViewBuilder
     private func usageWidgetBuilder(
         _ entry: UsageEntry<Double>
     ) -> some View {
 
-        UsageWidget(entry: entry)
+        UsageWidget(
+            entry: entry
+        )
     }
 
-    // MARK: - Traffic
+    // MARK: - Traffic Widget
 
     @ViewBuilder
     private func trafficWidgetBuilder(
@@ -332,7 +363,7 @@ struct DashboardView: View, GlobalTimerObserver {
         )
     }
 
-    // MARK: - Navigation
+    // MARK: - Navigation Link
 
     @ViewBuilder
     private func navigationLinkBuilder(
@@ -343,7 +374,9 @@ struct DashboardView: View, GlobalTimerObserver {
             destination: {
 
                 viewModel
-                    .anyListView(key: entry.key)
+                    .anyListView(
+                        key: entry.key
+                    )
                     .environmentObject(
                         HighlightedEntryKey(
                             object: entry.key
@@ -351,6 +384,7 @@ struct DashboardView: View, GlobalTimerObserver {
                     )
             },
             label: {
+
                 Color.clear
             }
         )
