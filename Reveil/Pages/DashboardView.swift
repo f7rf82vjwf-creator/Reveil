@@ -46,6 +46,9 @@ struct DashboardView: View, GlobalTimerObserver {
                 SecurityDashboardView()
                     .frame(maxWidth: .infinity)
                     
+                SecurityDashboardView()
+                    .frame(maxWidth: .infinity)
+                    
                 if PinStorage.shared.isPinned(forKey: .Security) {
                     Section { CheckmarkWidget() }
                 }
