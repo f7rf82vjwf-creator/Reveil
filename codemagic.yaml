@@ -1,0 +1,18 @@
+workflows:
+  ios-build:
+    name: Reveil iOS Build
+    max_build_duration: 120
+    instance_type: mac_mini_m2
+
+    environment:
+      xcode: latest
+
+    scripts:
+      - name: Build Reveil
+        script: |
+          xcode-project build-ipa \
+            --project "Reveil.xcodeproj" \
+            --scheme "Reveil"
+
+    artifacts:
+      - build/ios/ipa/*.ipa
