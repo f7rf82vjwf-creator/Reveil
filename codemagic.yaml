@@ -8,11 +8,18 @@ workflows:
       xcode: latest
 
     scripts:
+      - name: Set up code signing
+        script: |
+          xcode-project use-profiles
+
       - name: Build Reveil
         script: |
           xcode-project build-ipa \
-            --project "Reveil.xcodeproj" \
+            --project "$CM_BUILD_DIR/Reveil.xcodeproj" \
             --scheme "Reveil"
 
     artifacts:
       - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
