@@ -44,6 +44,9 @@ struct DashboardView: View, GlobalTimerObserver {
         ScrollView(.vertical) {
             VStack(spacing: 20) {
                 SecurityDashboardView()
+                     .frame(maxWidth: .infinity)
+    
+                SecurityDashboardView()
                     .frame(maxWidth: .infinity)
                     
                 SecurityDashboardView()
